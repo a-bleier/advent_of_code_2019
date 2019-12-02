@@ -3,7 +3,7 @@ package main
 /*
 
 package structur
--aoc
+-aoc2019
 	aoc1
 		code
 		inputfile
@@ -17,13 +17,22 @@ package structur
 */
 
 import(
-	"github.com/a-bleier/aoc/fileio"
-	"github.com/a-bleier/aoc/aoctest"
+	"github.com/a-bleier/aoc2019/fileio"
+	"github.com/a-bleier/aoc2019/aoc1"
+	"github.com/a-bleier/aoc2019/aoc2"
 	"fmt"
 )
 
 func main(){
-	aoctest.AoctestMain()
+	runAoc2()
+}
+
+func runAoc1(){
+	aoc1.Aoc1Main()
+}
+
+func runAoc2(){
+	aoc2.Aoc2Main()
 }
 
 func testFileio() {

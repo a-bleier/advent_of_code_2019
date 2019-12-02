@@ -1,7 +1,7 @@
 package aoctest
 
 import(
-	"github.com/a-bleier/aoc/fileio"
+	"github.com/a-bleier/aoc2019/fileio"
 	"fmt"
 	"log"
 	"strconv"
@@ -22,8 +22,6 @@ func getNumberList (lines []string ) []int {
 	}
 	return numbers
 }
-
-
 
 
 func AoctestMain() {
