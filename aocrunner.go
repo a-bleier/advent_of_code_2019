@@ -20,11 +20,12 @@ import(
 	"github.com/a-bleier/aoc2019/fileio"
 	"github.com/a-bleier/aoc2019/aoc1"
 	"github.com/a-bleier/aoc2019/aoc2"
+	"github.com/a-bleier/aoc2019/aoc3"
 	"fmt"
 )
 
 func main(){
-	runAoc2()
+	runAoc3()
 }
 
 func runAoc1(){
@@ -33,6 +34,10 @@ func runAoc1(){
 
 func runAoc2(){
 	aoc2.Aoc2Main()
+}
+
+func runAoc3(){
+	aoc3.Aoc3Main()
 }
 
 func testFileio() {
