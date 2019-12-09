@@ -23,7 +23,23 @@ const LT = 7
 const EQ = 8
 const OUTPUT = 19690720
 
-func getCode (line string) []int {
+type inputFunc func() int
+type outputFunc func(int)
+
+func inputFromTerminal() int {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter number: ")
+	text, _ := reader.ReadString('\n')
+	text = strings.TrimRight(text,"\n")
+	num, err := strconv.Atoi(text)
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+	return num
+}
+
+func GetCode (line string) []int {
 	var codes []int
 	codeStrings := strings.Split(line,",")
 
@@ -37,8 +53,8 @@ func getCode (line string) []int {
 	return codes
 }
 
-//returns the program state after execution
-func runProgram(program []int) []int{
+//RunProgram runs an intcode computer
+func RunProgram(program []int, input inputFunc, output outputFunc) []int{
 	pc := 0
 	instruction := program[pc]
 
@@ -118,21 +134,14 @@ func runProgram(program []int) []int{
 				program[dest] = op1 * op2
 				pc += 4
 			} else if instr == IN {
-				reader := bufio.NewReader(os.Stdin)
-				fmt.Print("Enter number: ")
-				text, _ := reader.ReadString('\n')
-				text = strings.TrimRight(text,"\n")
-				num, err := strconv.Atoi(text)
-	
-				if err != nil {
-					log.Fatal(err)
-				}
+				
+				
 				address := program[pc+1]
-				program[address] = num
+				program[address] = input()
 	
 				pc += 2
 			} else if instr == OUT {
-				fmt.Println(op1)
+				output(op1)
 				pc += 2
 			} else if instr == JT {
 				if op1 != 0 {
@@ -167,9 +176,13 @@ func runProgram(program []int) []int{
 }
 
 func Aoc5Main() {
-	program := getCode(fileio.GetLinesFromFile("aoc5")[0])
+	program := GetCode(fileio.GetLinesFromFile("aoc5")[0])
+
+	out := func(x int) {
+		fmt.Println(x)
+	}
 	
-	runProgram(program)
+	RunProgram(program, inputFromTerminal, out)
 
 	//Answer for one star is 7566643 (remove all jump or compare cases)
 
