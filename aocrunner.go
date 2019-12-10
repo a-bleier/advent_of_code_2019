@@ -25,11 +25,14 @@ import(
 	"github.com/a-bleier/aoc2019/aoc5"
 	"github.com/a-bleier/aoc2019/aoc6"
 	"github.com/a-bleier/aoc2019/aoc7"
+	"github.com/a-bleier/aoc2019/aoc8"
+	"github.com/a-bleier/aoc2019/aoc9"
+	"github.com/a-bleier/aoc2019/aoc10"
 	"fmt"
 )
 
 func main(){
-	runAoc7()
+	runAoc10()
 }
 
 
@@ -60,6 +63,18 @@ func runAoc6() {
 
 func runAoc7() {
 	aoc7.Aoc7Main()
+}
+
+func runAoc8() {
+	aoc8.Aoc8Main()
+}
+
+func runAoc9() {
+	aoc9.Aoc9Main()
+}
+
+func runAoc10() {
+	aoc10.Aoc10Main()
 }
 
 func testFileio() {
