@@ -4,10 +4,16 @@ import(
 	"fmt"
 	"github.com/a-bleier/aoc2019/fileio"
 	"math"
+	"sort"
 )
 
 type coord struct {
 	x,y int
+}
+
+type coordAtan struct {
+	c coord
+	atan float64
 }
 
 
@@ -28,108 +34,104 @@ func abs(x int) int {
 	return int(math.Abs(float64(x)))
 }
 
-func vaporize(field [][]bool, asteroidCount int, x, y int) coord {
+func vaporize(field [][]bool, asteroidsToDestroy int, x, y int) coord {
 	
 	var coordList []coord
-	count := 0
-
-	for true {
+	cont := true
+	i:=-1
+	for cont {
+		i++
 		deltaDx, deltaDy := 1,1
 		diffy, diffx := 0,0
 		startwertx, startwerty := 0, 0
-		for i := 0; i < 4; i++ {
-			fmt.Println("sector changed----")
-			if i == 0 {
-				deltaDx, deltaDy = 1,-1
-				diffy = y
-				diffx = len(field[0])-1-x
-				startwertx, startwerty = 0,-1
-			} else if i == 1{
-				deltaDx, deltaDy = 1,1
-				diffy = len(field)-1-y
-				diffx = len(field[0])-1-x
-				startwertx, startwerty = 1,0
-			} else if i == 2{
-				deltaDx, deltaDy = -1,1
-				diffy = len(field)-1-y
-				diffx = x
-				startwertx, startwerty = 0,1
-			} else if i == 3{
-				deltaDx, deltaDy = -1,-1
-				diffy = y
-				diffx = x
-				startwertx, startwerty = -1,0
-			}
+		fmt.Println("sector changed----")
+		if i % 4 == 0 {
+			deltaDx, deltaDy = 1,-1
+			diffy = y
+			diffx = len(field[0])-1-x
+			startwertx, startwerty = 0,-1
+		} else if i % 4 == 1{
+			deltaDx, deltaDy = 1,1
+			diffy = len(field)-1-y
+			diffx = len(field[0])-1-x
+			startwertx, startwerty = 1,0
+		} else if i % 4 == 2{
+			deltaDx, deltaDy = -1,1
+			diffy = len(field)-1-y
+			diffx = x
+			startwertx, startwerty = 0,1
+		} else if i % 4 == 3{
+			deltaDx, deltaDy = -1,-1
+			diffy = y
+			diffx = x
+			startwertx, startwerty = -1,0
+		}
 
-			coordList = make([]coord,0)
-			
+		coordList = make([]coord,0)
+		count := 0
 	
-			for dy := startwerty; abs(dy) <= diffy; dy += deltaDy{ 
-				for dx := startwertx; abs(dx) <= diffx; dx += deltaDx {
+		for dy := startwerty; abs(dy) <= diffy; dy += deltaDy{ 
+			for dx := startwertx; abs(dx) <= diffx; dx += deltaDx {
 		
 					//fmt.Println("me here")
-					euc := euclid(abs(dx),abs(dy))
-					if  !(euc == 1 || euc == 0) { //it is a scalar product
-						continue
-					}
-					if  dx == 0 && dy == 0 {
-						continue
-					}
+				euc := euclid(abs(dx),abs(dy))
+				if  !(euc == 1 || euc == 0) { //it is a scalar product
+					continue
+				}
+				if  dx == 0 && dy == 0 {
+					continue
+				}
 				
-					xtemp, ytemp := x+dx,y+dy
+				xtemp, ytemp := x+dx,y+dy
 						
 					
-					for xtemp >= 0 && xtemp < len(field[0]) && ytemp >= 0 && ytemp < len(field){
+				for xtemp >= 0 && xtemp < len(field[0]) && ytemp >= 0 && ytemp < len(field){
 						
 						
-						if field[ytemp][xtemp] {
-							fmt.Printf("vaporizing %d %d \n", xtemp, ytemp)
-							count++
-							field[ytemp][xtemp] = false						
-							coordList = append(coordList, coord{xtemp, ytemp})	
-							break			
-						}
-						xtemp, ytemp = xtemp+dx,ytemp+dy
-						
+					if field[ytemp][xtemp] {
+						fmt.Printf("vaporizing %d %d \n", xtemp, ytemp)
+						count++
+						field[ytemp][xtemp] = false						
+						coordList = append(coordList, coord{xtemp, ytemp})	
+						break			
 					}
-
-					if count == 200 {
-						break
-					}
-					
-								
-				}
-
-				if count == 200 {
-					break
-				}
+					xtemp, ytemp = xtemp+dx,ytemp+dy						
+				}								
+			}
 		
-			}
-			if count == 200 {
-				break
-			}
-	
-		}
-		if count == 200 {
-			break
 		}
 
+
+		if asteroidsToDestroy > count {
+			asteroidsToDestroy -= count
+		} else {
+			cont = false
+			break
+		}	
+		
 	}
 
 	
 	var lastCoord coord
 	var minRad float64 = 10
+	list := make([]coordAtan, 0)
 	
 	for _,c := range(coordList) {
-		dx, dy := c.x-x, y-c.y
-		fmt.Println(c)
+		dx, dy := c.x-x, y-c.y		
 		rad :=  math.Atan2(float64(dy), float64(dx))
-		fmt.Println(c, rad)
-		if minRad > rad {
-			minRad  = rad
-			lastCoord = c
+		list = append(list, coordAtan{c,rad})	
+	}
+
+	sort.Slice(list, func(i,j int) bool { return list[i].atan < list[j].atan })
+
+	for i:= 1; i <=asteroidsToDestroy; i++ {
+		ast := list[len(list)-i]
+		if ast.atan < minRad {
+			lastCoord = ast.c
+			minRad = ast.atan
 		}
 	}
+
 	
 	return lastCoord
 }
@@ -239,17 +241,8 @@ func findMaxAsteroids(field [][]bool) int {
 }
 
 func findLastVaporizedAsteroid(field [][]bool){
-	asteroidCount := 0
-
-	for i := 0; i < len(field); i++{
-		for k := 0; k < len(field[0]); k++ {
-			if field[i][k] {
-				asteroidCount++
-			}
-		}
-	}
-	asteroidCount-- // subtract (17/22)
-	astCoord := vaporize(field, asteroidCount, 17, 22)
+	lastAsteroid := 200
+	astCoord := vaporize(field, lastAsteroid, 11, 13)
 	fmt.Println("Last vaporized asteroid is ", astCoord.x, astCoord.y)
 }
 

@@ -16,9 +16,13 @@ package structur
 
 */
 
-import(
-	"github.com/a-bleier/aoc2019/fileio"
+import (
+	"fmt"
+
 	"github.com/a-bleier/aoc2019/aoc1"
+	"github.com/a-bleier/aoc2019/aoc10"
+	"github.com/a-bleier/aoc2019/aoc11"
+	"github.com/a-bleier/aoc2019/aoc12"
 	"github.com/a-bleier/aoc2019/aoc2"
 	"github.com/a-bleier/aoc2019/aoc3"
 	"github.com/a-bleier/aoc2019/aoc4"
@@ -27,26 +31,22 @@ import(
 	"github.com/a-bleier/aoc2019/aoc7"
 	"github.com/a-bleier/aoc2019/aoc8"
 	"github.com/a-bleier/aoc2019/aoc9"
-	"github.com/a-bleier/aoc2019/aoc10"
-	"github.com/a-bleier/aoc2019/aoc11"
-	"fmt"
+	"github.com/a-bleier/aoc2019/fileio"
 )
 
-func main(){
-	runAoc10()
+func main() {
+	runAoc12()
 }
 
-
-
-func runAoc1(){
+func runAoc1() {
 	aoc1.Aoc1Main()
 }
 
-func runAoc2(){
+func runAoc2() {
 	aoc2.Aoc2Main()
 }
 
-func runAoc3(){
+func runAoc3() {
 	aoc3.Aoc3Main()
 }
 
@@ -82,10 +82,13 @@ func runAoc11() {
 	aoc11.Aoc11Main()
 }
 
+func runAoc12() {
+	aoc12.Aoc12Main()
+}
 func testFileio() {
 	lines := fileio.GetLinesFromFile("aoctest")
 
-	for _,line := range(lines){
+	for _, line := range lines {
 		fmt.Println(line)
 	}
 }
